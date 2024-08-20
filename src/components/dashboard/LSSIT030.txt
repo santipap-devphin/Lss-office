@@ -1,0 +1,322 @@
+import { useState, useEffect, useCallback } from "react";
+import "@sweetalert2/theme-minimal/minimal.scss";
+import { getCommon, getCrrData } from "../../data";
+import { Card, Col, Row, Container,Form } from "react-bootstrap";
+import Button from "@mui/material/Button";
+import Search from "@mui/icons-material/Search";
+import Downloading from "@mui/icons-material/Downloading";
+import "@sweetalert2/theme-minimal/minimal.scss";
+
+import NavMenu from "../fragments/NavMenu";
+
+import { DataGrid, GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
+
+import Loader from "../../functions/Loader";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPlayCircle, faTimesCircle } from "@fortawesome/free-solid-svg-icons";
+import moment, { Moment } from "moment";
+import DatePicker, { DatePickerProps } from "antd/lib/date-picker";
+
+const loader = new Loader();
+
+const styles = {
+  datpicker: {
+    width: "100%",
+    height: "100%",
+    verticalAlign: "middle",
+  },
+};
+
+export default function LSSIT030() {
+  const data = [
+    {
+      id: 1,
+      col1: "10/05/2565",
+      col2: "09:20:10",
+      col3: "LSS-IP-30",
+      col4: "ประมวลผลการส่ง e-mail",
+      col5: "{CODE=MAIL-6505-000201}",
+      col6: "สำเร็จ",
+    },
+    {
+      id: 2,
+      col1: "11/05/2565",
+      col2: "10:40:10",
+      col3: "LSS-IP-30",
+      col4: "ประมวลผลการส่ง e-mail",
+      col5: "{CODE=MAIL-6505-000203}",
+      col6: "ไม่สำเร็จ",
+    },
+    {
+      id: 3,
+      col1: "20/05/2565",
+      col2: "14:30:12",
+      col3: "LSS-IP-30",
+      col4: "ประมวลผลการส่ง e-mail",
+      col5: "{CODE=MAIL-6505-000204}",
+      col6: "รอดำเนินการ",
+    },
+    {
+      id: 4,
+      col1: "24/05/2565",
+      col2: "14:30:11",
+      col3: "LSS-IP-30",
+      col4: "ประมวลผลการส่ง e-mail",
+      col5: "{CODE=MAIL-6505-000200}",
+      col6: "รอดำเนินการ",
+    },
+    {
+      id: 5,
+      col1: "24/05/2565",
+      col2: "15:30:22",
+      col3: "LSS-IP-30",
+      col4: "ประมวลผลการส่ง e-mail",
+      col5: "{CODE=MAIL-6505-000214}",
+      col6: "ไม่สำเร็จ",
+    },
+    {
+      id: 6,
+      col1: "25/05/2565",
+      col2: "16:31:02",
+      col3: "LSS-IP-30",
+      col4: "ประมวลผลการส่ง e-mail",
+      col5: "{CODE=MAIL-6505-000234}",
+      col6: "รอดำเนินการ",
+    },
+  ];
+
+  const [rows, setRows] = useState<any[]>([...data]);
+  const [from, setFrom] = useState<Moment | null>(null);
+  const [to, setTo] = useState<Moment | null>(null);
+
+  const columns: GridColDef[] = [
+    { field: "col1", headerName: "วันที่ประมวลผล", width: 200 },
+    { field: "col2", headerName: "เวลาที่ประมวลผล", width: 200 },
+    { field: "col3", headerName: "เมนู", width: 200 },
+    { field: "col4", headerName: "ชื่อเมนู", width: 300 },
+    { field: "col5", headerName: "พารามีเตอร์", width: 300 },
+    { field: "col6", headerName: "สถานะล่าสุด", width: 150 },
+    {
+      field: "col7",
+      headerName: "ปุ่ม",
+      width: 150,
+      renderCell: (params: GridRenderCellParams<any, any, any>) => {
+        if (params.row.col6 === "ไม่สำเร็จ")
+          return (
+            <div className="row w-100">
+              <div className="col">
+                <FontAwesomeIcon
+                  icon={faPlayCircle}
+                  onClick={() => handleReSend(params.row.id)}
+                  style={{ width: "1.5rem", height: "1.5rem" }}
+                  className="btn text-success me-3"
+                />
+              </div>
+              <div className="col"></div>
+            </div>
+          );
+
+        if (params.row.col6 === "รอดำเนินการ")
+          return (
+            <div className="row w-100">
+              <div className="col"></div>
+              <div className="col">
+                <FontAwesomeIcon
+                  icon={faTimesCircle}
+                  onClick={() => handleCancel(params.row.id)}
+                  className="btn text-danger me-3"
+                  style={{ width: "1.5rem", height: "1.5rem" }}
+                />
+              </div>
+            </div>
+          );
+
+        return <></>;
+      },
+    },
+  ];
+
+  const handleReSend = (id: number) => {
+    fakeProcess().then(() => {
+      setRows(() => {
+        return [
+          ...rows.filter((x) => x.id !== id),
+          {
+            ...rows.find((x) => x.id === id),
+            col6: "สำเร็จ",
+            col1: new Date().toLocaleDateString("th-TH", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }),
+            col2: new Date().toLocaleTimeString("th-TH", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+          },
+        ];
+      });
+    });
+  };
+
+  const handleCancel = (id: number) => {
+    fakeProcess().then(() => {
+      setRows(() => {
+        return [
+          ...rows.filter((x) => x.id !== id),
+          {
+            ...rows.find((x) => x.id === id),
+            col6: "ไม่สำเร็จ",
+            col1: new Date().toLocaleDateString("th-TH", {
+              year: "numeric",
+              month: "2-digit",
+              day: "2-digit",
+            }),
+            col2: new Date().toLocaleTimeString("th-TH", {
+              hour: "2-digit",
+              minute: "2-digit",
+              second: "2-digit",
+            }),
+          },
+        ];
+      });
+    });
+  };
+
+  const handleSearch = () => {
+    fakeProcess().then(() => {
+      if (from && to) {
+        const temp = rows.map((el) => ({
+          ...el,
+          col1: moment(el.col1, "DD/MM/YYYY").add(543,"years"),
+        }));
+
+        console.log(from,temp)
+
+        console.log(temp.filter(x => x.col1.diff(from) >= 0 && x.col1.diff(to) <= 0));
+      }
+    });
+  };
+
+  const fakeProcess = (): Promise<any> => {
+    return new Promise((resolve) => {
+      loader.show();
+      setTimeout(() => {
+        loader.close();
+        resolve(true);
+      }, 3000);
+    });
+  };
+
+  const customDateFormat: DatePickerProps["format"] = (date: Moment) => {
+    return `${date.toDate().toLocaleDateString("th-TH", {
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+    })}`;
+  };
+
+  return (
+    <Container fluid>
+      <Row>
+        <Col>
+          <NavMenu />
+          <Card style={{ marginTop: "7rem", marginBottom: "2rem" }}>
+            <Card.Header> LSS-IP-030 ประมวลผลการส่ง e-mail</Card.Header>
+            <Card.Body>
+              <Row style={{ marginBottom: 10, marginTop: 20 }}>
+                <Col sm={6} lg={1} style={{ textAlign: "right" }}>
+                  ช่วงวันที่
+                </Col>
+                <Col sm={6} lg={2}>
+                  <DatePicker
+                    allowClear={true}
+                    format={customDateFormat}
+                    className="form-control"
+                    value={from}
+                    onChange={(v: any) => {
+                      setFrom(v);
+                    }}
+                  />
+                </Col>
+                <Col sm={6} lg={1} style={{ textAlign: "right" }}>
+                  ถึงวันที่
+                </Col>
+                <Col sm={6} lg={2}>
+                  <DatePicker
+                    allowClear={true}
+                    format={customDateFormat}
+                    className="form-control"
+                    value={to}
+                    onChange={(v: any) => {
+                      setTo(v);
+                    }}
+                  />
+                </Col>
+                <Col sm={6} lg={1} style={{ textAlign: "right" }}></Col>
+                <Col sm={6} lg={1}></Col>
+                <Col sm={6} lg={1} style={{ textAlign: "right" }}></Col>
+                <Col sm={6} lg={1}></Col>
+                <Col
+                  lg={1}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    textAlign: "right",
+                  }}
+                >
+                  <Button
+                    style={{ marginRight: 5 }}
+                    variant="contained"
+                    startIcon={<Search />}
+                    onClick={handleSearch}
+                  >
+                    ค้นหา
+                  </Button>
+                </Col>
+                <Col
+                  md={1}
+                  style={{
+                    display: "flex",
+                    justifyContent: "flex-end",
+                    textAlign: "right",
+                  }}
+                >
+                  {/* <Button
+                    style={{ marginRight: 5 }}
+                    variant="contained"
+                    startIcon={<Downloading />}
+                  >
+                    {" "}
+                    Excel
+                  </Button> */}
+                </Col>
+              </Row>
+            </Card.Body>
+          </Card>
+
+          <Row>
+            <Col>
+              <div style={{ height: 500, width: "100%" }}>
+                <div style={{ display: "flex", height: "100%" }}>
+                  <div style={{ flexGrow: 1 }}>
+                    <DataGrid
+                      sx={{ fontFamily: "kanit", fontSize: 18, boxShadow: 2 }}
+                      rows={rows}
+                      columns={columns}
+                    />
+                  </div>
+                </div>
+              </div>
+            </Col>
+          </Row>
+
+          <div style={{ display: "flex", height: "100%" }}>
+            <div style={{ flexGrow: 1 }}></div>
+          </div>
+        </Col>
+      </Row>
+    </Container>
+  );
+}

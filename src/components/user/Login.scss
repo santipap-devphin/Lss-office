@@ -1,0 +1,47 @@
+.bd_box{
+    height: 100%;
+    display: flex;
+    background-color: #66615B;
+    background-size: cover !important;
+}
+
+.aLabel_policy {
+    text-decoration: none;
+    color: #000;
+    font-size: 18px;
+    font-weight: 700;
+    margin-top: 3%;
+  }
+
+  .aLabel:hover {
+    color: #edae20;
+  }
+
+  .panel_addition{
+    display: flex;
+    flex-direction: column;
+  }
+
+  .header_label_addition {
+    padding-top: 5%;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 26px;
+    line-height: 45px;
+    color: #000000;
+    text-align: center;
+    width: 90%;
+  }
+
+  .box_report{
+    border: 2px solid #1b366b;
+    height: 15rem;
+    width: 90%;
+    border-radius: 10px;
+    margin-top: 3%;
+    margin-left: 5%;
+  }
+
+  .scroll-list{
+    overflow-y: auto;
+  }

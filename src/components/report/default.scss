@@ -1,0 +1,29 @@
+table, th, td {
+    border: 1px solid #cccccc;
+    border-collapse: collapse;
+    padding-top: 15px;
+
+  }
+  table{
+      width:98%;
+    padding: 10px;
+    margin-left: 10px;
+    margin-right: 15px;
+  }
+  .tbhead{
+
+    background-color: #dddddd;
+  }
+  .tbcenter{
+      text-align: center;
+  }
+  .tbcentbnumter{
+    text-align: right;
+}
+  .tbsum{
+      background-color: #ffffff;
+      font-weight: bold;
+  }
+
+  .colauto{width:120px;text-align: center;
+  vertical-align: top;}

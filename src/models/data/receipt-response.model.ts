@@ -1,0 +1,32 @@
+export interface ReceiptResponse {
+  CODE: string;
+  QUARTER: number;
+  YEAR: number;
+  DATE: Date;
+  REF1?: string;
+  REF2?: string;
+  DOCUMENT_CODE: string;
+  VERSION?: string;
+  NO: number;
+  DUE_DATE: Date;
+  PAY_UPSLIP?: string;
+  PAY_UPSLIP_AFE_CODE?: string;
+  PAY_BACKOFFICE?: string;
+  RECEIPT_NO?: string;
+  RECEIPT_DATE: Date;
+  RECEIPT_PATHFILE?: string;
+  RECEIPT_PATHFILE_ATTACHMENT?: string;
+  PAYINFILE_ATTACHMENT_CODE?: string;
+  PAYMENT_STATUS?: string;
+  ENABLE?: string;
+  DEL?: string;
+  CREATED_DATE: Date;
+  CREATE_USER?: string;
+  UPDATED_DATE: Date;
+  UPDATE_USER?: string;
+  COMPANY_CODE: string;
+  COMPANY_TYPE_CODE: string;
+  AMOUNT_FINE: number;
+  AMOUNT_PAY: number;
+  AMOUNT_TOTALPAY: number;
+}

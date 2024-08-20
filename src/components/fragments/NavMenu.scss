@@ -1,0 +1,15 @@
+.d-flex.align-items-center.nav-item.dropdown > a {
+  &> div {
+    display: flex;
+    flex-direction: column;
+    min-width: 141px;
+
+    &> span {
+      color: #fff !important;
+    }
+  }
+
+  &::after {
+    display: none;
+  }
+}
